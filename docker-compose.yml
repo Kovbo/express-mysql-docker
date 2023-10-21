@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  mydb:
+    image: mysql:8
+    ports:
+      - "3307:3306"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "pass"
+      MYSQL_DATABASE: "mydb"
+    volumes:
+      - db-data:/var/lib/mysql
+
+  mybackend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3000"
+    depends_on:
+      - mydb
+    env_file:
+      - .env
+
+volumes:
+  db-data:
